@@ -54,7 +54,7 @@ export default function HomePage() {
             Թարմ մթերք՝ ձեր դռան մոտ
           </h1>
           <p className="max-w-xl text-base text-sidebar-foreground/80 leading-relaxed md:text-lg">
-            2021 սուպերմարկետը՝ ձեր վստահելի օնլայն խանութը։ Պատվիրեք հազարավոր
+          Red սուպերմարկետը՝ ձեր վստահելի օնլայն խանութը։ Պատվիրեք հազարավոր
             թարմ ապրանքներ և ստացեք առաքում նույն օրը։ Վճարեք առաքման պահին։
           </p>
           <div className="flex flex-wrap gap-3">

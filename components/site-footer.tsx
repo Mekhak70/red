@@ -9,9 +9,9 @@ export function SiteFooter() {
       <div className="mx-auto grid max-w-7xl gap-8 px-4 py-12 sm:grid-cols-2 lg:grid-cols-4">
         <div className="flex flex-col gap-4">
           <Link href="/" className="flex items-center gap-2">
-            <Image src="/logo.png" alt="2021 սուպերմարկետ" width={44} height={44} className="size-11 rounded-lg object-contain" />
+            <Image src="/logo.png" alt="Red սուպերմարկետ" width={44} height={44} className="size-11 rounded-lg object-contain" />
             <div className="flex flex-col leading-none">
-              <span className="text-xl font-extrabold text-primary">2021</span>
+              <span className="text-xl font-extrabold text-primary">Red</span>
               <span className="text-[10px] font-medium text-sidebar-foreground/60">ՍՈՒՊԵՐՄԱՐԿԵՏ</span>
             </div>
           </Link>
@@ -68,7 +68,7 @@ export function SiteFooter() {
 
       <div className="border-t border-sidebar-border">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-2 px-4 py-4 text-xs text-sidebar-foreground/60 sm:flex-row">
-          <span>© {new Date().getFullYear()} 2021 Սուպերմարկետ։ Բոլոր իրավունքները պաշտպանված են։</span>
+          <span>© {new Date().getFullYear()} Red Սուպերմարկետ։ Բոլոր իրավունքները պաշտպանված են։</span>
           <span>Վճարում առաքման պահին · Անվճար առաքում 10,000 ֏-ից</span>
         </div>
       </div>

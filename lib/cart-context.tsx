@@ -25,7 +25,7 @@ type CartAction =
   | { type: 'CLEAR' }
   | { type: 'HYDRATE'; state: CartState }
 
-const STORAGE_KEY = 'store2021-cart'
+const STORAGE_KEY = 'storeRed-cart'
 
 function reducer(state: CartState, action: CartAction): CartState {
   switch (action.type) {

@@ -9,7 +9,7 @@ import { STORE } from '@/lib/data'
 export const metadata: Metadata = {
   title: 'Մեր մասին',
   description:
-    '2021 սուպերմարկետ — ձեր վստահելի օնլայն խանութը Երևանում։ Թարմ մթերք, արագ առաքում և վճարում առաքման պահին։',
+    'Red սուպերմարկետ — ձեր վստահելի օնլայն խանութը Երևանում։ Թարմ մթերք, արագ առաքում և վճարում առաքման պահին։',
 }
 
 const values = [
@@ -71,7 +71,7 @@ export default function AboutPage() {
           <div className="relative aspect-[4/3] overflow-hidden rounded-2xl border">
             <Image
               src="/hero-grocery.png"
-              alt="2021 սուպերմարկետի թարմ մթերք"
+              alt="Red սուպերմարկետի թարմ մթերք"
               fill
               sizes="(max-width: 768px) 100vw, 50vw"
               className="object-cover"
@@ -144,12 +144,12 @@ export default function AboutPage() {
             <div className="flex flex-col items-center gap-2">
               <Image
                 src="/logo.png"
-                alt="2021 սուպերմարկետ"
+                alt="Red սուպերմարկետ"
                 width={72}
                 height={72}
                 className="size-18 rounded-xl object-contain"
               />
-              <p className="text-2xl font-extrabold text-primary">2021</p>
+              <p className="text-2xl font-extrabold text-primary">Red</p>
               <p className="text-sm text-muted-foreground">
                 Ձեր թաղամասի թվային սուպերմարկետը
               </p>

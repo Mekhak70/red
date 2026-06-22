@@ -115,12 +115,12 @@ export const reviews: Review[] = [
 ]
 
 export const STORE = {
-  name: '2021',
+  name: 'Red',
   address: 'Գայ համայնք, Երևանյան 45',
   phone: '+374 91 331233',
   phoneRaw: '+37491331233',
   whatsapp: '37491331233',
-  email: 'info@store2021.am',
+  email: 'info@storeRed.am',
   hours: 'Աշխատում ենք  24/7',
   freeDeliveryThreshold: 10000,
   deliveryFee: 1000,

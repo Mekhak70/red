@@ -41,7 +41,7 @@ export default function OrderTrackingPage() {
           Հետևել պատվերին
         </h1>
         <p className="mt-1 text-pretty text-muted-foreground">
-          Մուտքագրեք ձեր պատվերի համարը (օր.՝ 2021-123456)՝ կարգավիճակը ստուգելու համար։
+          Մուտքագրեք ձեր պատվերի համարը (օր.՝ Red-123456)՝ կարգավիճակը ստուգելու համար։
         </p>
 
         <form
@@ -54,7 +54,7 @@ export default function OrderTrackingPage() {
               id="orderId"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="2021-123456"
+              placeholder="Red-123456"
             />
           </div>
           <Button type="submit">

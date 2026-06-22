@@ -7,7 +7,7 @@ import { STORE } from '@/lib/data'
 export const metadata: Metadata = {
   title: 'Կապ',
   description:
-    'Կապվեք 2021 սուպերմարկետի հետ։ Հեռախոս, էլ. փոստ, WhatsApp և հասցե Երևանում։',
+    'Կապվեք Red սուպերմարկետի հետ։ Հեռախոս, էլ. փոստ, WhatsApp և հասցե Երևանում։',
 }
 
 const contactCards = [
@@ -96,7 +96,7 @@ export default function ContactPage() {
             </div>
             <div className="overflow-hidden rounded-2xl border">
               <iframe
-                title="2021 սուպերմարկետի քարտեզ"
+                title="Red սուպերմարկետի քարտեզ"
                 src="https://www.openstreetmap.org/export/embed.html?bbox=44.50%2C40.17%2C44.55%2C40.20&layer=mapnik"
                 className="h-64 w-full"
                 loading="lazy"

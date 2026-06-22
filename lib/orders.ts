@@ -31,7 +31,7 @@ export type Order = {
   total: number
 }
 
-const KEY = 'store2021_orders'
+const KEY = 'storeRed_orders'
 
 export const STATUS_LABELS: Record<OrderStatus, string> = {
   pending: 'Սպասում է',

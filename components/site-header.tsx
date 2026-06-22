@@ -150,9 +150,9 @@ export function SiteHeader() {
 function Logo() {
   return (
     <Link href="/" className="flex items-center gap-2">
-      <Image src="/logo.png" alt="2021 սուպերմարկետ" width={40} height={40} className="size-10 rounded-lg object-contain" />
+      <Image src="/logo.png" alt="Red սուպերմարկետ" width={40} height={40} className="size-10 rounded-lg object-contain" />
       <div className="flex flex-col leading-none">
-        <span className="text-lg font-extrabold tracking-tight text-primary">2021</span>
+        <span className="text-lg font-extrabold tracking-tight text-primary">Red</span>
         <span className="text-[10px] font-medium text-muted-foreground">ՍՈՒՊԵՐՄԱՐԿԵՏ</span>
       </div>
     </Link>
