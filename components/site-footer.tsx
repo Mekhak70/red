@@ -38,7 +38,7 @@ export function SiteFooter() {
           <ul className="flex flex-col gap-2 text-sm text-sidebar-foreground/70">
             <li><Link href="/about" className="hover:text-primary">Մեր մասին</Link></li>
             <li><Link href="/contact" className="hover:text-primary">Կապ</Link></li>
-            <li><Link href="/order-tracking" className="hover:text-primary">Հետևել պատվերին</Link></li>
+            {/* <li><Link href="/order-tracking" className="hover:text-primary">Հետևել պատվերին</Link></li> */}
             <li><Link href="/products" className="hover:text-primary">Բոլոր ապրանքները</Link></li>
           </ul>
         </div>

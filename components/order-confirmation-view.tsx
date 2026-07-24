@@ -128,9 +128,9 @@ export function OrderConfirmationView({ orderId }: { orderId: string }) {
             <Phone className="size-4 text-primary" />
             <span>Հարցե՞ր ունեք պատվերի վերաբերյալ։ Զանգահարեք՝ {STORE.phone}</span>
           </div>
-          <Button variant="outline" render={<Link href="/order-tracking" />}>
+          {/* <Button variant="outline" render={<Link href="/order-tracking" />}>
             Հետևել պատվերին
-          </Button>
+          </Button> */}
         </div>
       </div>
     </SiteShell>

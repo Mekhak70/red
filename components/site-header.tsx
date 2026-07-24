@@ -22,7 +22,7 @@ const navLinks = [
   { href: '/', label: 'Գլխավոր' },
   { href: '/products', label: 'Ապրանքներ' },
   { href: '/categories', label: 'Կատեգորիաներ' },
-  { href: '/order-tracking', label: 'Հետևել պատվերին' },
+  // { href: '/order-tracking', label: 'Հետևել պատվերին' },
   { href: '/about', label: 'Մեր մասին' },
   { href: '/contact', label: 'Կապ' },
 ]

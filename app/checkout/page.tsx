@@ -42,9 +42,11 @@ export default function CheckoutPage() {
 
   function handleSubmit(ev: React.FormEvent) {
     ev.preventDefault()
+  
     if (!validate() || items.length === 0) return
+  
     setSubmitting(true)
-
+  
     const order: Order = {
       id: generateOrderId(),
       createdAt: new Date().toISOString(),
@@ -62,9 +64,52 @@ export default function CheckoutPage() {
       deliveryFee,
       total,
     }
-
+  
     addOrder(order)
+  
+    const message = `🛒 Նոր պատվեր
+  
+  📦 Պատվերի համար՝ ${order.id}
+  
+  👤 Անուն՝ ${form.name}
+  📞 Հեռախոս՝ ${form.phone}
+  📍 Հասցե՝ ${form.address}
+  
+  💳 Վճարում՝ ${
+      payment === 'cash'
+        ? 'Կանխիկ առաքման պահին'
+        : 'Քարտով առաքման պահին'
+    }
+  
+  🛍 Ապրանքներ:
+  ${items
+    .map(
+      (item) =>
+        `• ${item.product.name} × ${item.quantity} = ${formatAMD(
+          item.product.price * item.quantity
+        )}`
+    )
+    .join("\n")}
+  
+  ━━━━━━━━━━━━━━
+  
+  Ապրանքներ՝ ${formatAMD(subtotal)}
+  Առաքում՝ ${
+      deliveryFee === 0 ? "Անվճար" : formatAMD(deliveryFee)
+    }
+  
+  💰 Ընդհանուր՝ ${formatAMD(total)}
+  
+  📝 Նշումներ:
+  ${form.notes || "-"}`
+  
     clear()
+  
+    window.open(
+      `https://wa.me/37491331233?text=${encodeURIComponent(message)}`,
+      "_blank"
+    )
+  
     router.push(`/order-confirmation/${order.id}`)
   }
 

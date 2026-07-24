@@ -8,6 +8,12 @@ import {
   ShieldCheck,
   Star,
   Truck,
+  ChevronRight,
+  ShoppingBag,
+  Gift,
+  Zap,
+  Award,
+  ThumbsUp,
 } from 'lucide-react'
 import { SiteShell } from '@/components/site-shell'
 import { ProductRow } from '@/components/product-row'
@@ -27,6 +33,13 @@ const trustBadges = [
   { icon: Clock, title: 'Ամեն օր բաց', text: STORE.hours },
 ]
 
+const stats = [
+  { value: '10,000+', label: 'Ապրանքներ' },
+  { value: '5,000+', label: 'Գոհ հաճախորդ' },
+  { value: '98%', label: 'Դրական կարծիք' },
+  { value: '24/7', label: 'Առցանց պատվեր' },
+]
+
 export default function HomePage() {
   const featured = products.filter((p) => p.badges.includes('featured'))
   const newArrivals = products.filter((p) => p.badges.includes('new'))
@@ -34,165 +47,296 @@ export default function HomePage() {
 
   return (
     <SiteShell>
-      {/* Hero */}
-      <section className="relative overflow-hidden bg-sidebar text-sidebar-foreground">
-        <div className="absolute inset-0">
-          <Image
-            src="/hero-grocery.png"
-            alt=""
-            fill
-            priority
-            className="object-cover opacity-30"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-sidebar via-sidebar/90 to-sidebar/40" />
-        </div>
-        <div className="relative mx-auto flex max-w-7xl flex-col gap-6 px-4 py-16 md:py-24">
-          <Badge className="w-fit bg-accent text-accent-foreground">
-            Անվճար առաքում 10,000 ֏-ից
-          </Badge>
-          <h1 className="max-w-2xl text-4xl font-extrabold leading-tight tracking-tight text-balance md:text-6xl">
-            Թարմ մթերք՝ ձեր դռան մոտ
-          </h1>
-          <p className="max-w-xl text-base text-sidebar-foreground/80 leading-relaxed md:text-lg">
-          Red սուպերմարկետը՝ ձեր վստահելի օնլայն խանութը։ Պատվիրեք հազարավոր
-            թարմ ապրանքներ և ստացեք առաքում նույն օրը։ Վճարեք առաքման պահին։
-          </p>
-          <div className="flex flex-wrap gap-3">
-            <Button size="lg" render={<Link href="/products" />}>
-              Սկսել գնումները
-              <ArrowRight className="size-4" />
-            </Button>
-            <Button
-              size="lg"
-              variant="outline"
-              className="border-sidebar-foreground/30 bg-transparent text-sidebar-foreground hover:bg-sidebar-foreground/10"
-              render={<Link href="/categories" />}
-            >
-              Դիտել կատեգորիաները
-            </Button>
-          </div>
-        </div>
-      </section>
+      {/* Hero Section - Soft & Elegant */}
+      <section className="relative min-h-screen overflow-hidden">
+  {/* Background */}
+  <div className="absolute inset-0">
+    <Image
+      src="/red-main.png"
+      alt="RED Supermarket"
+      fill
+      priority
+      className="object-cover"
+    />
 
-      {/* Trust badges */}
-      <section className="border-b bg-card">
-        <div className="mx-auto grid max-w-7xl grid-cols-2 gap-4 px-4 py-6 lg:grid-cols-4">
-          {trustBadges.map((b) => (
-            <div key={b.title} className="flex items-center gap-3">
-              <div className="flex size-11 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+    <div className="absolute inset-0 bg-black/50" />
+  </div>
+
+  {/* Content */}
+  <div className="relative z-10 mx-auto flex min-h-screen max-w-7xl items-center px-6">
+    <div className="max-w-3xl">
+
+      {/* Badge */}
+      <div className="mb-8 inline-flex items-center rounded-full bg-red-600 px-5 py-2 text-sm font-semibold text-white shadow-lg">
+        🚚 Անվճար առաքում 10,000 ֏-ից
+      </div>
+
+      {/* Title */}
+      <h1 className="text-5xl font-black leading-tight text-white md:text-7xl">
+        Թարմ մթերք
+        <br />
+
+        <span className="text-red-500">
+          ամեն օր
+        </span>
+      </h1>
+
+      {/* Description */}
+      <p className="mt-8 max-w-2xl text-lg leading-8 text-white/80 md:text-xl">
+        RED Սուպերմարկետում կգտնեք հազարավոր թարմ և որակյալ
+        ապրանքներ՝ արագ առաքմամբ, մատչելի գներով և բարձր
+        սպասարկմամբ։
+      </p>
+
+      {/* Buttons */}
+      <div className="mt-10 flex flex-wrap gap-4">
+
+        <Link href="/products">
+          <Button
+            size="lg"
+            className="rounded-xl bg-red-600 px-8 py-6 text-lg font-semibold hover:bg-red-700"
+          >
+            Սկսել գնումները →
+          </Button>
+        </Link>
+
+        <Link href="/categories">
+          <Button
+            variant="secondary"
+            size="lg"
+            className="rounded-xl bg-white px-8 py-6 text-lg font-semibold text-black hover:bg-gray-100"
+          >
+            Կատեգորիաներ
+          </Button>
+        </Link>
+
+      </div>
+
+      {/* Features */}
+      <div className="mt-16 grid grid-cols-1 gap-4 sm:grid-cols-3">
+
+        <div className="rounded-2xl bg-white/10 p-5 backdrop-blur-md border border-white/10">
+          <div className="mb-2 text-3xl">🚚</div>
+          <h3 className="font-semibold text-white">
+            Արագ առաքում
+          </h3>
+          <p className="mt-2 text-sm text-white/70">
+            Նույն օրվա առաքում Երևանի տարածքում։
+          </p>
+        </div>
+
+        <div className="rounded-2xl bg-white/10 p-5 backdrop-blur-md border border-white/10">
+          <div className="mb-2 text-3xl">🥬</div>
+          <h3 className="font-semibold text-white">
+            Թարմ ապրանքներ
+          </h3>
+          <p className="mt-2 text-sm text-white/70">
+            Ամեն օր թարմացվող տեսականի։
+          </p>
+        </div>
+
+        <div className="rounded-2xl bg-white/10 p-5 backdrop-blur-md border border-white/10">
+          <div className="mb-2 text-3xl">💳</div>
+          <h3 className="font-semibold text-white">
+            Հեշտ վճարում
+          </h3>
+          <p className="mt-2 text-sm text-white/70">
+            Վճարեք կանխիկ կամ քարտով։
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  {/* Bottom Fade */}
+  <div className="absolute bottom-0 left-0 h-40 w-full bg-gradient-to-t from-white to-transparent" />
+</section>
+
+      {/* Trust badges - Soft & Elegant */}
+      <section className="relative border-y border-border/40 bg-gradient-to-b from-card/80 via-card/60 to-muted/10">
+        <div className="absolute inset-0 bg-grid-black/[0.01] bg-[size:40px_40px]" />
+        <div className="relative mx-auto grid max-w-7xl grid-cols-2 gap-3 px-4 py-10 lg:grid-cols-4">
+          {trustBadges.map((b, i) => (
+            <div 
+              key={b.title} 
+              className="group flex items-center gap-4 rounded-2xl p-4 transition-all duration-500 hover:bg-gradient-to-br hover:from-rose-500/5 hover:to-amber-500/5 hover:scale-105 hover:shadow-lg"
+              style={{ animationDelay: `${i * 100}ms` }}
+            >
+              <div className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-rose-500/10 to-amber-500/10 text-rose-500/70 transition-all duration-500 group-hover:from-rose-500/20 group-hover:to-amber-500/20 group-hover:scale-110 group-hover:shadow-md">
                 <b.icon className="size-5" />
               </div>
               <div className="leading-tight">
-                <p className="text-sm font-bold">{b.title}</p>
-                <p className="text-xs text-muted-foreground">{b.text}</p>
+                <p className="text-sm font-semibold text-foreground/90">{b.title}</p>
+                <p className="text-xs text-muted-foreground/70">{b.text}</p>
               </div>
             </div>
           ))}
         </div>
       </section>
 
-      {/* Categories */}
-      <section className="mx-auto max-w-7xl px-4 py-8">
-        <div className="mb-5 flex items-end justify-between">
-          <h2 className="text-2xl font-extrabold tracking-tight">Կատեգորիաներ</h2>
+      {/* Categories - Soft */}
+      <section className="mx-auto max-w-7xl px-4 py-16">
+        <div className="mb-10 flex items-end justify-between">
+          <div>
+            <Badge className="mb-3 bg-rose-500/5 text-rose-500/70 hover:bg-rose-500/10 border-rose-500/10">
+              🛍️ Կատեգորիաներ
+            </Badge>
+            <h2 className="text-3xl font-extrabold tracking-tight text-foreground/90">Բոլոր կատեգորիաները</h2>
+            <p className="mt-2 text-muted-foreground/70">
+              Ընտրեք ձեր ուզած ապրանքատեսակը
+            </p>
+          </div>
           <Link
             href="/categories"
-            className="flex items-center gap-1 text-sm font-medium text-primary hover:underline"
+            className="group hidden items-center gap-1 text-sm font-medium text-rose-500/70 hover:text-rose-500/90 hover:underline sm:flex"
           >
-            Տեսնել բոլորը <ArrowRight className="size-4" />
+            Տեսնել բոլորը 
+            <ChevronRight className="size-4 transition-transform group-hover:translate-x-1" />
           </Link>
         </div>
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-8">
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-8">
           {categories.map((c) => (
             <Link
               key={c.id}
               href={`/categories/${c.slug}`}
-              className="group flex flex-col items-center gap-2 rounded-xl border bg-card p-3 text-center transition-shadow hover:shadow-md"
+              className="group flex flex-col items-center gap-3 rounded-2xl border border-border/40 bg-card/50 p-5 text-center backdrop-blur-sm transition-all duration-500 hover:shadow-xl hover:-translate-y-2 hover:border-rose-500/20 hover:bg-gradient-to-b hover:from-rose-500/5 hover:to-transparent"
             >
-              <div className="relative size-16 overflow-hidden rounded-full bg-muted">
+              <div className="relative size-20 overflow-hidden rounded-2xl bg-gradient-to-br from-muted/50 to-muted/30 transition-all duration-500 group-hover:scale-110 group-hover:shadow-lg">
                 <Image
                   src={c.image || '/placeholder.svg'}
                   alt={c.name}
                   fill
-                  sizes="64px"
-                  className="object-cover transition-transform group-hover:scale-110"
+                  sizes="80px"
+                  className="object-cover transition-transform duration-700 group-hover:scale-110"
                 />
               </div>
-              <span className="text-xs font-semibold">{c.name}</span>
+              <span className="text-sm font-semibold text-foreground/80">{c.name}</span>
             </Link>
           ))}
         </div>
       </section>
 
+      {/* Product Rows */}
       <ProductRow
-        title="Զեղչված ապրանքներ"
+        title="🔥 Զեղչված ապրանքներ"
         subtitle="Շահավետ առաջարկներ՝ սահմանափակ ժամանակով"
         products={onSale}
         href="/products?sort=sale"
       />
 
       <ProductRow
-        title="Առաջարկվող ապրանքներ"
+        title="⭐ Առաջարկվող ապրանքներ"
         subtitle="Մեր հաճախորդների սիրելիները"
         products={featured}
         href="/products"
       />
 
       <ProductRow
-        title="Նոր ապրանքներ"
+        title="✨ Նոր ապրանքներ"
         subtitle="Թարմ համալրումներ մեր դարակներում"
         products={newArrivals}
         href="/products?sort=new"
       />
 
-      {/* Reviews */}
-      <section className="bg-muted/40">
-        <div className="mx-auto max-w-7xl px-4 py-12">
-          <div className="mb-6 text-center">
-            <h2 className="text-2xl font-extrabold tracking-tight">Հաճախորդների կարծիքները</h2>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Ավելի քան 5,000 գոհ հաճախորդ
+      {/* Reviews - Soft */}
+      <section className="relative bg-gradient-to-b from-muted/20 via-muted/10 to-transparent">
+        <div className="absolute inset-0 bg-grid-black/[0.01] bg-[size:40px_40px]" />
+        <div className="relative mx-auto max-w-7xl px-4 py-20">
+          <div className="mb-12 text-center">
+            <Badge className="mb-4 bg-gradient-to-r from-amber-500/10 to-amber-500/5 text-amber-600/70 hover:from-amber-500/20 hover:to-amber-500/10 border-amber-500/10">
+              <Star className="mr-1 size-3 fill-amber-400/70 text-amber-400/70" />
+              5,000+ գոհ հաճախորդ
+            </Badge>
+            <h2 className="text-3xl font-extrabold tracking-tight text-foreground/90 md:text-4xl">
+              Հաճախորդների կարծիքները
+            </h2>
+            <p className="mt-2 text-muted-foreground/70">
+              Ինչ են ասում մեր գնորդները
             </p>
           </div>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {reviews.map((r) => (
-              <figure key={r.id} className="flex flex-col gap-3 rounded-xl border bg-card p-5">
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {reviews.map((r, i) => (
+              <figure 
+                key={r.id} 
+                className="group flex flex-col gap-4 rounded-2xl border border-border/40 bg-card/50 p-6 backdrop-blur-sm transition-all duration-500 hover:shadow-xl hover:-translate-y-2 hover:bg-card/80 hover:border-rose-500/20"
+                style={{ animationDelay: `${i * 100}ms` }}
+              >
                 <div className="flex gap-0.5">
                   {Array.from({ length: 5 }).map((_, i) => (
                     <Star
                       key={i}
                       className={
                         i < r.rating
-                          ? 'size-4 fill-accent text-accent'
-                          : 'size-4 text-muted-foreground/30'
+                          ? 'size-4 fill-amber-400/70 text-amber-400/70 transition-all group-hover:scale-110 group-hover:rotate-12'
+                          : 'size-4 text-muted-foreground/20'
                       }
                     />
                   ))}
                 </div>
-                <blockquote className="text-sm leading-relaxed text-pretty">
-                  {r.text}
+                <blockquote className="text-sm leading-relaxed text-pretty text-foreground/80">
+                  "{r.text}"
                 </blockquote>
-                <figcaption className="mt-auto text-sm font-semibold">{r.name}</figcaption>
+                <figcaption className="mt-auto flex items-center gap-3">
+                  <div className="size-10 rounded-full bg-gradient-to-br from-rose-500/10 to-amber-500/10 flex items-center justify-center text-rose-500/70 font-bold">
+                    {r.name.charAt(0)}
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-foreground/90">{r.name}</p>
+                    <div className="flex items-center gap-1">
+                      <ThumbsUp className="size-3 text-emerald-500/70" />
+                      <p className="text-xs text-muted-foreground/70">Հաստատված գնորդ</p>
+                    </div>
+                  </div>
+                </figcaption>
               </figure>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Delivery CTA */}
-      <section className="mx-auto max-w-7xl px-4 py-12">
-        <div className="flex flex-col items-center gap-4 rounded-2xl bg-primary px-6 py-12 text-center text-primary-foreground">
-          <Truck className="size-10" />
-          <h2 className="text-2xl font-extrabold text-balance md:text-3xl">
-            Պատվիրեք հիմա, ստացեք նույն օրը
-          </h2>
-          <p className="max-w-xl text-primary-foreground/85 text-pretty">
-            Անվճար առաքում 10,000 ֏-ից բարձր պատվերների դեպքում։ Վճարեք առաքման
-            պահին՝ կանխիկ կամ քարտով։
-          </p>
-          <Button size="lg" variant="secondary" render={<Link href="/products" />}>
-            Սկսել գնումները
-          </Button>
+      {/* Delivery CTA - Soft & Elegant */}
+      <section className="mx-auto max-w-7xl px-4 py-16">
+        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-rose-500/80 via-rose-400/70 to-amber-400/60 px-8 py-20 text-center text-white shadow-xl">
+          {/* Decorative elements - softer */}
+          <div className="absolute -right-32 -top-32 size-96 rounded-full bg-white/5 blur-3xl animate-pulse" />
+          <div className="absolute -left-32 -bottom-32 size-96 rounded-full bg-white/5 blur-3xl animate-pulse animation-delay-1000" />
+          
+          <div className="relative z-10 flex flex-col items-center gap-6">
+            <div className="rounded-full bg-white/10 p-5 backdrop-blur-sm shadow-lg hover:scale-105 transition-transform duration-300">
+              <ShoppingBag className="size-11 text-white/80" />
+            </div>
+            <h2 className="text-3xl font-extrabold text-balance md:text-4xl lg:text-5xl text-white/95">
+              Պատվիրեք հիմա, ստացեք նույն օրը
+            </h2>
+            <p className="max-w-2xl text-white/80 text-pretty text-lg">
+              Անվճար առաքում 10,000 ֏-ից բարձր պատվերների դեպքում։ 
+              Վճարեք առաքման պահին՝ կանխիկ կամ քարտով։
+            </p>
+            <div className="flex flex-wrap items-center justify-center gap-4 pt-4">
+              <Link href="/products">
+                <Button 
+                  size="lg" 
+                  variant="secondary" 
+                  className="group px-10 py-7 text-lg font-semibold text-foreground/90 bg-white/90 hover:bg-white shadow-2xl transition-all duration-300 hover:scale-105 hover:shadow-3xl rounded-2xl"
+                >
+                  Սկսել գնումները
+                  <ArrowRight className="ml-2 size-5 transition-transform group-hover:translate-x-1 group-hover:scale-110" />
+                </Button>
+              </Link>
+              <Link href="/delivery">
+                <Button 
+                  size="lg" 
+                  variant="outline" 
+                  className="border border-white/20 bg-white/5 px-10 py-7 text-lg font-semibold text-white backdrop-blur-sm transition-all duration-300 hover:bg-white/10 hover:border-white/40 hover:scale-105 rounded-2xl"
+                >
+                  Առաքման պայմաններ
+                  <Gift className="ml-2 size-5" />
+                </Button>
+              </Link>
+            </div>
+          </div>
         </div>
       </section>
     </SiteShell>
