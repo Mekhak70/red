@@ -48,63 +48,66 @@ export default function HomePage() {
   return (
     <SiteShell>
       {/* Hero Section - Soft & Elegant */}
-      <section className="relative min-h-screen overflow-hidden">
+      <section className="relative overflow-hidden">
   {/* Background */}
   <div className="absolute inset-0">
-    <Image
-      src="/red-main.png"
-      alt="RED Supermarket"
-      fill
-      priority
-      className="object-cover"
-    />
-
-    <div className="absolute inset-0 bg-black/50" />
+  <Image
+  src="/red-main.png"
+  alt="RED Supermarket"
+  fill
+  priority
+  className="
+    object-contain
+    object-top
+    md:object-cover
+    md:object-center
+  "
+/>
+    <div className="absolute inset-0 bg-black/55" />
   </div>
 
   {/* Content */}
-  <div className="relative z-10 mx-auto flex min-h-screen max-w-7xl items-center px-6">
+  <div className="relative z-10 mx-auto flex min-h-[90vh] md:min-h-screen max-w-7xl items-center px-5 md:px-6 py-24 md:py-0">
     <div className="max-w-3xl">
 
       {/* Badge */}
-      <div className="mb-8 inline-flex items-center rounded-full bg-red-600 px-5 py-2 text-sm font-semibold text-white shadow-lg">
+      <div className="mb-6 inline-flex items-center rounded-full bg-red-600 px-4 py-2 text-xs sm:text-sm font-semibold text-white shadow-lg">
         🚚 Անվճար առաքում 10,000 ֏-ից
       </div>
 
       {/* Title */}
-      <h1 className="text-5xl font-black leading-tight text-white md:text-7xl">
+      <h1 className="text-4xl sm:text-5xl md:text-7xl font-black leading-tight text-white">
         Թարմ մթերք
         <br />
-
         <span className="text-red-500">
           ամեն օր
         </span>
       </h1>
 
       {/* Description */}
-      <p className="mt-8 max-w-2xl text-lg leading-8 text-white/80 md:text-xl">
+      <p className="mt-6 max-w-xl text-base sm:text-lg md:text-xl leading-7 md:leading-8 text-white/80">
         RED Սուպերմարկետում կգտնեք հազարավոր թարմ և որակյալ
         ապրանքներ՝ արագ առաքմամբ, մատչելի գներով և բարձր
         սպասարկմամբ։
       </p>
 
       {/* Buttons */}
-      <div className="mt-10 flex flex-wrap gap-4">
+      <div className="mt-8 flex flex-col sm:flex-row gap-3 sm:gap-4">
 
-        <Link href="/products">
+        <Link href="/products" className="w-full sm:w-auto">
           <Button
             size="lg"
-            className="rounded-xl bg-red-600 px-8 py-6 text-lg font-semibold hover:bg-red-700"
+            className="w-full rounded-xl bg-red-600 py-6 text-base md:text-lg font-semibold hover:bg-red-700"
           >
             Սկսել գնումները →
           </Button>
         </Link>
 
-        <Link href="/categories">
+        <Link href="/categories" className="w-full sm:w-auto">
           <Button
             variant="secondary"
             size="lg"
-            className="rounded-xl bg-white px-8 py-6 text-lg font-semibold text-black hover:bg-gray-100"
+            className="w-full rounded-xl bg-white py-6 text-base md:text-lg font-semibold text-black hover:bg-gray-100"
           >
             Կատեգորիաներ
           </Button>
@@ -113,11 +116,11 @@ export default function HomePage() {
       </div>
 
       {/* Features */}
-      <div className="mt-16 grid grid-cols-1 gap-4 sm:grid-cols-3">
+      <div className="mt-12 grid grid-cols-1 sm:grid-cols-3 gap-4">
 
-        <div className="rounded-2xl bg-white/10 p-5 backdrop-blur-md border border-white/10">
-          <div className="mb-2 text-3xl">🚚</div>
-          <h3 className="font-semibold text-white">
+        <div className="rounded-2xl border border-white/10 bg-white/10 p-4 backdrop-blur-md">
+          <div className="text-3xl">🚚</div>
+          <h3 className="mt-3 font-semibold text-white">
             Արագ առաքում
           </h3>
           <p className="mt-2 text-sm text-white/70">
@@ -125,9 +128,9 @@ export default function HomePage() {
           </p>
         </div>
 
-        <div className="rounded-2xl bg-white/10 p-5 backdrop-blur-md border border-white/10">
-          <div className="mb-2 text-3xl">🥬</div>
-          <h3 className="font-semibold text-white">
+        <div className="rounded-2xl border border-white/10 bg-white/10 p-4 backdrop-blur-md">
+          <div className="text-3xl">🥬</div>
+          <h3 className="mt-3 font-semibold text-white">
             Թարմ ապրանքներ
           </h3>
           <p className="mt-2 text-sm text-white/70">
@@ -135,9 +138,9 @@ export default function HomePage() {
           </p>
         </div>
 
-        <div className="rounded-2xl bg-white/10 p-5 backdrop-blur-md border border-white/10">
-          <div className="mb-2 text-3xl">💳</div>
-          <h3 className="font-semibold text-white">
+        <div className="rounded-2xl border border-white/10 bg-white/10 p-4 backdrop-blur-md">
+          <div className="text-3xl">💳</div>
+          <h3 className="mt-3 font-semibold text-white">
             Հեշտ վճարում
           </h3>
           <p className="mt-2 text-sm text-white/70">
@@ -150,8 +153,7 @@ export default function HomePage() {
     </div>
   </div>
 
-  {/* Bottom Fade */}
-  <div className="absolute bottom-0 left-0 h-40 w-full bg-gradient-to-t from-white to-transparent" />
+  <div className="absolute bottom-0 left-0 h-32 md:h-40 w-full bg-gradient-to-t from-white to-transparent" />
 </section>
 
       {/* Trust badges - Soft & Elegant */}
