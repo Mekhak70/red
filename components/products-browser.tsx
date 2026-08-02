@@ -1,163 +1,128 @@
+// components/products-browser.tsx
 'use client'
 
-import { useMemo, useState } from 'react'
-import { useSearchParams } from 'next/navigation'
-import { SlidersHorizontal, X } from 'lucide-react'
-import { ProductCard } from '@/components/product-card'
-import { Button } from '@/components/ui/button'
+import { useState, useEffect } from 'react'
+import Link from 'next/link'
+import Image from 'next/image'
+import { Product, formatAMD } from '@/lib/data'
 import { Badge } from '@/components/ui/badge'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
-import { categories, products as allProducts } from '@/lib/data'
-import { cn } from '@/lib/utils'
+import { Input } from '@/components/ui/input'
+import { Search } from 'lucide-react'
 
-type SortKey = 'popular' | 'price-asc' | 'price-desc' | 'new' | 'sale'
+interface ProductsBrowserProps {
+  initialCategory: string | null
+  initialProducts: Product[]
+}
 
-export function ProductsBrowser({ initialCategory }: { initialCategory?: string }) {
-  const searchParams = useSearchParams()
-  const q = searchParams.get('q')?.toLowerCase() ?? ''
-  const sortParam = (searchParams.get('sort') as SortKey) || 'popular'
+export function ProductsBrowser({ initialCategory, initialProducts }: ProductsBrowserProps) {
+  const [searchTerm, setSearchTerm] = useState('')
+  const [filteredProducts, setFilteredProducts] = useState(initialProducts)
 
-  const [activeCat, setActiveCat] = useState<string | null>(initialCategory ?? null)
-  const [sort, setSort] = useState<SortKey>(sortParam)
-  const [onlyInStock, setOnlyInStock] = useState(false)
-
-  const filtered = useMemo(() => {
-    let list = [...allProducts]
-    if (q) {
-      list = list.filter(
-        (p) =>
-          p.name.toLowerCase().includes(q) ||
-          p.description.toLowerCase().includes(q),
+  useEffect(() => {
+    if (searchTerm.trim() === '') {
+      setFilteredProducts(initialProducts)
+    } else {
+      const filtered = initialProducts.filter((product) =>
+        product.name.toLowerCase().includes(searchTerm.toLowerCase())
       )
+      setFilteredProducts(filtered)
     }
-    if (activeCat) list = list.filter((p) => p.categoryId === activeCat)
-    if (onlyInStock) list = list.filter((p) => p.inStock)
-
-    switch (sort) {
-      case 'price-asc':
-        list.sort((a, b) => a.price - b.price)
-        break
-      case 'price-desc':
-        list.sort((a, b) => b.price - a.price)
-        break
-      case 'new':
-        list = list.filter((p) => p.badges.includes('new')).concat(
-          list.filter((p) => !p.badges.includes('new')),
-        )
-        break
-      case 'sale':
-        list.sort((a, b) => Number(b.badges.includes('sale')) - Number(a.badges.includes('sale')))
-        break
-      default:
-        list.sort((a, b) => b.rating - a.rating)
-    }
-    return list
-  }, [q, activeCat, onlyInStock, sort])
+  }, [searchTerm, initialProducts])
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-6">
-      <div className="mb-5">
-        <h1 className="text-2xl font-extrabold tracking-tight md:text-3xl">
-          {q ? `Որոնման արդյունքներ՝ «${q}»` : 'Բոլոր ապրանքները'}
-        </h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          {filtered.length} ապրանք
-        </p>
+      {/* Search */}
+      <div className="mb-6 relative">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground/50" />
+        <Input
+          type="text"
+          placeholder="Փնտրել ապրանքներ..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="pl-10 rounded-xl border-border/40 focus-visible:ring-rose-500/30"
+        />
       </div>
 
-      <div className="flex flex-col gap-6 lg:flex-row">
-        {/* Sidebar filters */}
-        <aside className="lg:w-56 lg:shrink-0">
-          <div className="flex items-center gap-2 lg:mb-3">
-            <SlidersHorizontal className="size-4 text-muted-foreground" />
-            <span className="text-sm font-bold">Կատեգորիաներ</span>
-          </div>
-          <div className="mt-3 flex flex-wrap gap-2 lg:mt-0 lg:flex-col lg:gap-1">
-            <button
-              onClick={() => setActiveCat(null)}
-              className={cn(
-                'rounded-md px-3 py-2 text-left text-sm font-medium transition-colors',
-                !activeCat ? 'bg-primary/10 text-primary' : 'hover:bg-muted',
-              )}
-            >
-              Բոլորը
-            </button>
-            {categories.map((c) => (
-              <button
-                key={c.id}
-                onClick={() => setActiveCat(c.id)}
-                className={cn(
-                  'rounded-md px-3 py-2 text-left text-sm font-medium transition-colors',
-                  activeCat === c.id ? 'bg-primary/10 text-primary' : 'hover:bg-muted',
-                )}
-              >
-                {c.name}
-              </button>
-            ))}
-          </div>
+      {/* Results count */}
+      <p className="text-sm text-muted-foreground/70 mb-4">
+        {filteredProducts.length} ապրանք
+      </p>
 
-          <div className="mt-4 border-t pt-4">
-            <label className="flex cursor-pointer items-center gap-2 text-sm">
-              <input
-                type="checkbox"
-                checked={onlyInStock}
-                onChange={(e) => setOnlyInStock(e.target.checked)}
-                className="size-4 accent-[var(--primary)]"
-              />
-              Միայն առկա ապրանքները
-            </label>
-          </div>
-        </aside>
-
-        {/* Grid */}
-        <div className="flex-1">
-          <div className="mb-4 flex items-center justify-between gap-3">
-            <div className="flex flex-wrap items-center gap-2">
-              {activeCat && (
-                <Badge variant="secondary" className="gap-1">
-                  {categories.find((c) => c.id === activeCat)?.name}
-                  <button onClick={() => setActiveCat(null)} aria-label="Հեռացնել ֆիլտրը">
-                    <X className="size-3" />
-                  </button>
-                </Badge>
-              )}
-            </div>
-            <Select value={sort} onValueChange={(v) => setSort(v as SortKey)}>
-              <SelectTrigger className="w-44" aria-label="Դասավորել">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="popular">Ըստ հանրաճանաչության</SelectItem>
-                <SelectItem value="price-asc">Գին՝ աճման կարգով</SelectItem>
-                <SelectItem value="price-desc">Գին՝ նվազման կարգով</SelectItem>
-                <SelectItem value="new">Նոր ապրանքներ</SelectItem>
-                <SelectItem value="sale">Զեղչված</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          {filtered.length === 0 ? (
-            <div className="flex flex-col items-center justify-center gap-3 rounded-xl border border-dashed py-16 text-center">
-              <p className="text-muted-foreground">Ապրանքներ չեն գտնվել</p>
-              <Button variant="outline" onClick={() => setActiveCat(null)}>
-                Մաքրել ֆիլտրերը
-              </Button>
-            </div>
-          ) : (
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-              {filtered.map((p) => (
-                <ProductCard key={p.id} product={p} />
-              ))}
-            </div>
-          )}
+      {/* Products */}
+      {filteredProducts.length === 0 ? (
+        <div className="flex flex-col items-center justify-center py-20 text-center">
+          <p className="text-lg text-muted-foreground/70">
+            {searchTerm ? 'Ապրանքներ չեն գտնվել' : 'Ապրանքներ չկան'}
+          </p>
         </div>
-      </div>
+      ) : (
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {filteredProducts.map((product) => (
+            <Link
+              key={product.id}
+              href={`/products/${product.slug}`}
+              className="group relative overflow-hidden rounded-2xl border border-border/40 bg-card/50 p-4 transition-all duration-500 hover:shadow-xl hover:-translate-y-2 hover:border-rose-500/20 hover:bg-card/80"
+            >
+              <div className="relative aspect-square overflow-hidden rounded-xl bg-muted/30">
+                {product.image ? (
+                  <Image
+                    src={product.image}
+                    alt={product.name}
+                    fill
+                    className="object-cover transition-transform duration-700 group-hover:scale-110"
+                    unoptimized={product.image.startsWith('http')}
+                  />
+                ) : (
+                  <div className="flex h-full items-center justify-center text-muted-foreground/30">
+                    No image
+                  </div>
+                )}
+                {product.oldPrice && (
+                  <Badge className="absolute top-3 right-3 bg-red-500/90 hover:bg-red-500 text-white border-0 shadow-lg px-3 py-1 text-sm font-semibold">
+                    -{Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100)}%
+                  </Badge>
+                )}
+                {product.badges.includes('new') && (
+                  <Badge className="absolute top-3 left-3 bg-green-500/90 hover:bg-green-500 text-white border-0 shadow-lg px-3 py-1 text-sm font-semibold">
+                    🆕 Նոր
+                  </Badge>
+                )}
+                {product.badges.includes('featured') && (
+                  <Badge className="absolute bottom-3 left-3 bg-yellow-500/90 hover:bg-yellow-500 text-white border-0 shadow-lg px-3 py-1 text-sm font-semibold">
+                    ⭐ Առաջարկվող
+                  </Badge>
+                )}
+              </div>
+              <div className="mt-3">
+                <h3 className="font-semibold text-foreground/90 line-clamp-1 group-hover:text-rose-500/90 transition-colors">
+                  {product.name}
+                </h3>
+                <div className="mt-1 flex items-center gap-2">
+                  <span className="text-lg font-bold text-red-600">
+                    {formatAMD(product.price)}
+                  </span>
+                  {product.oldPrice && (
+                    <span className="text-sm text-muted-foreground/50 line-through">
+                      {formatAMD(product.oldPrice)}
+                    </span>
+                  )}
+                </div>
+                <div className="mt-2 flex items-center gap-1 text-sm text-muted-foreground/70">
+                  <span>⭐ {product.rating}</span>
+                  <span>({product.reviewCount})</span>
+                </div>
+                <div className="mt-2 text-xs">
+                  {product.inStock ? (
+                    <span className="text-green-600">✅ Կա պահեստում</span>
+                  ) : (
+                    <span className="text-red-600">❌ Բացակայում է</span>
+                  )}
+                </div>
+              </div>
+            </Link>
+          ))}
+        </div>
+      )}
     </div>
   )
 }

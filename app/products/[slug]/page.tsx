@@ -1,3 +1,4 @@
+// app/products/[slug]/page.tsx
 import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
@@ -8,37 +9,49 @@ import { ProductRow } from '@/components/product-row'
 import { AddToCart } from '@/components/add-to-cart'
 import { Badge } from '@/components/ui/badge'
 import {
-  getProductBySlug,
-  products,
   categories,
   formatAMD,
+  fetchAllProductsFromSheets,
+  defaultProducts,
+  getCategoryBySlug,
 } from '@/lib/data'
 
 type Params = { params: Promise<{ slug: string }> }
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { slug } = await params
-  const product = getProductBySlug(slug)
-  if (!product) return { title: 'Ապրանք չի գտնվել' }
-  return { title: product.name, description: product.description }
+  const products = await fetchAllProductsFromSheets()
+  const allProducts = products.length > 0 ? products : defaultProducts
+  const product = allProducts.find((p) => p.slug === slug)
+  
+  if (!product) {
+    return { title: 'Ապրանք չի գտնվել' }
+  }
+  
+  return { 
+    title: product.name, 
+    description: product.description 
+  }
 }
 
-export function generateStaticParams() {
-  return products.map((p) => ({ slug: p.slug }))
+export async function generateStaticParams() {
+  const products = await fetchAllProductsFromSheets()
+  const allProducts = products.length > 0 ? products : defaultProducts
+  return allProducts.map((p) => ({ slug: p.slug }))
 }
 
 export default async function ProductPage({ params }: Params) {
   const { slug } = await params
-  const product = getProductBySlug(slug)
+  const products = await fetchAllProductsFromSheets()
+  const allProducts = products.length > 0 ? products : defaultProducts
+  const product = allProducts.find((p) => p.slug === slug)
+  
   if (!product) notFound()
 
   const category = categories.find((c) => c.id === product.categoryId)
-  const related = products
+  const related = allProducts
     .filter((p) => p.categoryId === product.categoryId && p.id !== product.id)
     .slice(0, 4)
-  const oldPrice = product.badges.includes('sale')
-    ? Math.round(product.price * 1.25)
-    : null
 
   return (
     <SiteShell>
@@ -60,20 +73,30 @@ export default async function ProductPage({ params }: Params) {
 
         <div className="grid gap-8 lg:grid-cols-2">
           <div className="relative aspect-square overflow-hidden rounded-2xl border bg-card">
-            <Image
-              src={product.image || '/placeholder.svg'}
-              alt={product.name}
-              fill
-              priority
-              sizes="(max-width: 1024px) 100vw, 50vw"
-              className="object-cover"
-            />
+            {product.image ? (
+              <Image
+                src={product.image}
+                alt={product.name}
+                fill
+                priority
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                className="object-cover"
+                unoptimized={product.image.startsWith('http')}
+              />
+            ) : (
+              <div className="flex h-full items-center justify-center text-muted-foreground/30">
+                No image
+              </div>
+            )}
             <div className="absolute left-3 top-3 flex flex-col gap-1.5">
               {product.badges.includes('sale') && (
-                <Badge className="bg-primary text-primary-foreground">Զեղչ</Badge>
+                <Badge className="bg-primary text-primary-foreground">🔥 Զեղչ</Badge>
               )}
               {product.badges.includes('new') && (
-                <Badge className="bg-accent text-accent-foreground">Նոր</Badge>
+                <Badge className="bg-accent text-accent-foreground">🆕 Նոր</Badge>
+              )}
+              {product.badges.includes('featured') && (
+                <Badge className="bg-yellow-500 text-white">⭐ Առաջարկվող</Badge>
               )}
             </div>
           </div>
@@ -99,9 +122,9 @@ export default async function ProductPage({ params }: Params) {
               <span className="text-3xl font-extrabold text-primary">
                 {formatAMD(product.price)}
               </span>
-              {oldPrice && (
+              {product.oldPrice && (
                 <span className="mb-1 text-lg text-muted-foreground line-through">
-                  {formatAMD(oldPrice)}
+                  {formatAMD(product.oldPrice)}
                 </span>
               )}
             </div>

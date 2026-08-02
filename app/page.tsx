@@ -1,3 +1,4 @@
+// app/page.tsx
 import Image from 'next/image'
 import Link from 'next/link'
 import type { Metadata } from 'next'
@@ -11,15 +12,19 @@ import {
   ChevronRight,
   ShoppingBag,
   Gift,
-  Zap,
-  Award,
-  ThumbsUp,
 } from 'lucide-react'
 import { SiteShell } from '@/components/site-shell'
 import { ProductRow } from '@/components/product-row'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { categories, products, reviews, STORE } from '@/lib/data'
+import { 
+  categories, 
+  STORE, 
+  formatAMD,
+  fetchAllDataFromSheets,
+  defaultProducts,
+  reviews as defaultReviews
+} from '@/lib/data'
 
 export const metadata: Metadata = {
   description:
@@ -40,121 +45,122 @@ const stats = [
   { value: '24/7', label: 'Առցանց պատվեր' },
 ]
 
-export default function HomePage() {
-  const featured = products.filter((p) => p.badges.includes('featured'))
-  const newArrivals = products.filter((p) => p.badges.includes('new'))
-  const onSale = products.filter((p) => p.badges.includes('sale'))
+export default async function HomePage() {
+  // Fetch all data from Google Sheets
+  const data = await fetchAllDataFromSheets();
+  
+  // Use fetched data or fallback to defaults
+  const allProducts = data.products.length > 0 ? data.products : defaultProducts;
+  const allReviews = data.reviews.length > 0 ? data.reviews : defaultReviews;
+
+  const featured = allProducts.filter((p) => p.badges.includes('featured'))
+  const newArrivals = allProducts.filter((p) => p.badges.includes('new'))
+  const onSale = allProducts.filter((p) => p.badges.includes('sale'))
 
   return (
     <SiteShell>
       {/* Hero Section - Soft & Elegant */}
       <section className="relative overflow-hidden">
-  {/* Background */}
-  <div className="absolute inset-0">
-  <Image
-  src="/red-main.png"
-  alt="RED Supermarket"
-  fill
-  priority
-  className="
-    object-contain
-    object-top
-    md:object-cover
-    md:object-center
-  "
-/>
-    <div className="absolute inset-0 bg-black/55" />
-  </div>
-
-  {/* Content */}
-  <div className="relative z-10 mx-auto flex min-h-[90vh] md:min-h-screen max-w-7xl items-center px-5 md:px-6 py-24 md:py-0">
-    <div className="max-w-3xl">
-
-      {/* Badge */}
-      <div className="mb-6 inline-flex items-center rounded-full bg-red-600 px-4 py-2 text-xs sm:text-sm font-semibold text-white shadow-lg">
-        🚚 Անվճար առաքում 10,000 ֏-ից
-      </div>
-
-      {/* Title */}
-      <h1 className="text-4xl sm:text-5xl md:text-7xl font-black leading-tight text-white">
-        Թարմ մթերք
-        <br />
-        <span className="text-red-500">
-          ամեն օր
-        </span>
-      </h1>
-
-      {/* Description */}
-      <p className="mt-6 max-w-xl text-base sm:text-lg md:text-xl leading-7 md:leading-8 text-white/80">
-        RED Սուպերմարկետում կգտնեք հազարավոր թարմ և որակյալ
-        ապրանքներ՝ արագ առաքմամբ, մատչելի գներով և բարձր
-        սպասարկմամբ։
-      </p>
-
-      {/* Buttons */}
-      <div className="mt-8 flex flex-col sm:flex-row gap-3 sm:gap-4">
-
-        <Link href="/products" className="w-full sm:w-auto">
-          <Button
-            size="lg"
-            className="w-full rounded-xl bg-red-600 py-6 text-base md:text-lg font-semibold hover:bg-red-700"
-          >
-            Սկսել գնումները →
-          </Button>
-        </Link>
-
-        <Link href="/categories" className="w-full sm:w-auto">
-          <Button
-            variant="secondary"
-            size="lg"
-            className="w-full rounded-xl bg-white py-6 text-base md:text-lg font-semibold text-black hover:bg-gray-100"
-          >
-            Կատեգորիաներ
-          </Button>
-        </Link>
-
-      </div>
-
-      {/* Features */}
-      <div className="mt-12 grid grid-cols-1 sm:grid-cols-3 gap-4">
-
-        <div className="rounded-2xl border border-white/10 bg-white/10 p-4 backdrop-blur-md">
-          <div className="text-3xl">🚚</div>
-          <h3 className="mt-3 font-semibold text-white">
-            Արագ առաքում
-          </h3>
-          <p className="mt-2 text-sm text-white/70">
-            Նույն օրվա առաքում Երևանի տարածքում։
-          </p>
+        {/* Background */}
+        <div className="absolute inset-0">
+          <Image
+            src="/red-main.png"
+            alt="RED Supermarket"
+            fill
+            priority
+            className="
+              object-contain
+              object-top
+              md:object-cover
+              md:object-center
+            "
+          />
+          <div className="absolute inset-0 bg-black/55" />
         </div>
 
-        <div className="rounded-2xl border border-white/10 bg-white/10 p-4 backdrop-blur-md">
-          <div className="text-3xl">🥬</div>
-          <h3 className="mt-3 font-semibold text-white">
-            Թարմ ապրանքներ
-          </h3>
-          <p className="mt-2 text-sm text-white/70">
-            Ամեն օր թարմացվող տեսականի։
-          </p>
+        {/* Content */}
+        <div className="relative z-10 mx-auto flex min-h-[90vh] md:min-h-screen max-w-7xl items-center px-5 md:px-6 py-24 md:py-0">
+          <div className="max-w-3xl">
+            {/* Badge */}
+            <div className="mb-6 inline-flex items-center rounded-full bg-red-600 px-4 py-2 text-xs sm:text-sm font-semibold text-white shadow-lg">
+              🚚 Անվճար առաքում {formatAMD(STORE.freeDeliveryThreshold)}-ից
+            </div>
+
+            {/* Title */}
+            <h1 className="text-4xl sm:text-5xl md:text-7xl font-black leading-tight text-white">
+              Թարմ մթերք
+              <br />
+              <span className="text-red-500">
+                ամեն օր
+              </span>
+            </h1>
+
+            {/* Description */}
+            <p className="mt-6 max-w-xl text-base sm:text-lg md:text-xl leading-7 md:leading-8 text-white/80">
+              RED Սուպերմարկետում կգտնեք հազարավոր թարմ և որակյալ
+              ապրանքներ՝ արագ առաքմամբ, մատչելի գներով և բարձր
+              սպասարկմամբ։
+            </p>
+
+            {/* Buttons */}
+            <div className="mt-8 flex flex-col sm:flex-row gap-3 sm:gap-4">
+              <Link href="/products" className="w-full sm:w-auto">
+                <Button
+                  size="lg"
+                  className="w-full rounded-xl bg-red-600 py-6 text-base md:text-lg font-semibold hover:bg-red-700"
+                >
+                  Սկսել գնումները →
+                </Button>
+              </Link>
+
+              <Link href="/categories" className="w-full sm:w-auto">
+                <Button
+                  variant="secondary"
+                  size="lg"
+                  className="w-full rounded-xl bg-white py-6 text-base md:text-lg font-semibold text-black hover:bg-gray-100"
+                >
+                  Կատեգորիաներ
+                </Button>
+              </Link>
+            </div>
+
+            {/* Features */}
+            <div className="mt-12 grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div className="rounded-2xl border border-white/10 bg-white/10 p-4 backdrop-blur-md">
+                <div className="text-3xl">🚚</div>
+                <h3 className="mt-3 font-semibold text-white">
+                  Արագ առաքում
+                </h3>
+                <p className="mt-2 text-sm text-white/70">
+                  Նույն օրվա առաքում Երևանի տարածքում։
+                </p>
+              </div>
+
+              <div className="rounded-2xl border border-white/10 bg-white/10 p-4 backdrop-blur-md">
+                <div className="text-3xl">🥬</div>
+                <h3 className="mt-3 font-semibold text-white">
+                  Թարմ ապրանքներ
+                </h3>
+                <p className="mt-2 text-sm text-white/70">
+                  Ամեն օր թարմացվող տեսականի։
+                </p>
+              </div>
+
+              <div className="rounded-2xl border border-white/10 bg-white/10 p-4 backdrop-blur-md">
+                <div className="text-3xl">💳</div>
+                <h3 className="mt-3 font-semibold text-white">
+                  Հեշտ վճարում
+                </h3>
+                <p className="mt-2 text-sm text-white/70">
+                  Վճարեք կանխիկ կամ քարտով։
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <div className="rounded-2xl border border-white/10 bg-white/10 p-4 backdrop-blur-md">
-          <div className="text-3xl">💳</div>
-          <h3 className="mt-3 font-semibold text-white">
-            Հեշտ վճարում
-          </h3>
-          <p className="mt-2 text-sm text-white/70">
-            Վճարեք կանխիկ կամ քարտով։
-          </p>
-        </div>
-
-      </div>
-
-    </div>
-  </div>
-
-  <div className="absolute bottom-0 left-0 h-32 md:h-40 w-full bg-gradient-to-t from-white to-transparent" />
-</section>
+        <div className="absolute bottom-0 left-0 h-32 md:h-40 w-full bg-gradient-to-t from-white to-transparent" />
+      </section>
 
       {/* Trust badges - Soft & Elegant */}
       <section className="relative border-y border-border/40 bg-gradient-to-b from-card/80 via-card/60 to-muted/10">
@@ -221,26 +227,32 @@ export default function HomePage() {
       </section>
 
       {/* Product Rows */}
-      <ProductRow
-        title="🔥 Զեղչված ապրանքներ"
-        subtitle="Շահավետ առաջարկներ՝ սահմանափակ ժամանակով"
-        products={onSale}
-        href="/products?sort=sale"
-      />
+      {onSale.length > 0 && (
+        <ProductRow
+          title="🔥 Զեղչված ապրանքներ"
+          subtitle="Շահավետ առաջարկներ՝ սահմանափակ ժամանակով"
+          products={onSale}
+          href="/products?sort=sale"
+        />
+      )}
 
-      <ProductRow
-        title="⭐ Առաջարկվող ապրանքներ"
-        subtitle="Մեր հաճախորդների սիրելիները"
-        products={featured}
-        href="/products"
-      />
+      {featured.length > 0 && (
+        <ProductRow
+          title="⭐ Առաջարկվող ապրանքներ"
+          subtitle="Մեր հաճախորդների սիրելիները"
+          products={featured}
+          href="/products"
+        />
+      )}
 
-      <ProductRow
-        title="✨ Նոր ապրանքներ"
-        subtitle="Թարմ համալրումներ մեր դարակներում"
-        products={newArrivals}
-        href="/products?sort=new"
-      />
+      {newArrivals.length > 0 && (
+        <ProductRow
+          title="✨ Նոր ապրանքներ"
+          subtitle="Թարմ համալրումներ մեր դարակներում"
+          products={newArrivals}
+          href="/products?sort=new"
+        />
+      )}
 
       {/* Reviews - Soft */}
       <section className="relative bg-gradient-to-b from-muted/20 via-muted/10 to-transparent">
@@ -249,7 +261,7 @@ export default function HomePage() {
           <div className="mb-12 text-center">
             <Badge className="mb-4 bg-gradient-to-r from-amber-500/10 to-amber-500/5 text-amber-600/70 hover:from-amber-500/20 hover:to-amber-500/10 border-amber-500/10">
               <Star className="mr-1 size-3 fill-amber-400/70 text-amber-400/70" />
-              5,000+ գոհ հաճախորդ
+              {allReviews.length}+ գոհ հաճախորդ
             </Badge>
             <h2 className="text-3xl font-extrabold tracking-tight text-foreground/90 md:text-4xl">
               Հաճախորդների կարծիքները
@@ -259,7 +271,7 @@ export default function HomePage() {
             </p>
           </div>
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {reviews.map((r, i) => (
+            {allReviews.slice(0, 4).map((r, i) => (
               <figure 
                 key={r.id} 
                 className="group flex flex-col gap-4 rounded-2xl border border-border/40 bg-card/50 p-6 backdrop-blur-sm transition-all duration-500 hover:shadow-xl hover:-translate-y-2 hover:bg-card/80 hover:border-rose-500/20"
@@ -286,10 +298,7 @@ export default function HomePage() {
                   </div>
                   <div>
                     <p className="text-sm font-semibold text-foreground/90">{r.name}</p>
-                    <div className="flex items-center gap-1">
-                      <ThumbsUp className="size-3 text-emerald-500/70" />
-                      <p className="text-xs text-muted-foreground/70">Հաստատված գնորդ</p>
-                    </div>
+                    <p className="text-xs text-muted-foreground/70">{r.date}</p>
                   </div>
                 </figcaption>
               </figure>
@@ -313,7 +322,7 @@ export default function HomePage() {
               Պատվիրեք հիմա, ստացեք նույն օրը
             </h2>
             <p className="max-w-2xl text-white/80 text-pretty text-lg">
-              Անվճար առաքում 10,000 ֏-ից բարձր պատվերների դեպքում։ 
+              Անվճար առաքում {formatAMD(STORE.freeDeliveryThreshold)}-ից բարձր պատվերների դեպքում։ 
               Վճարեք առաքման պահին՝ կանխիկ կամ քարտով։
             </p>
             <div className="flex flex-wrap items-center justify-center gap-4 pt-4">
