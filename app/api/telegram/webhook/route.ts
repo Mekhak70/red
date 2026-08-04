@@ -1,8 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 
-
 const token = process.env.TELEGRAM_BOT_TOKEN;
-
 
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -16,29 +14,23 @@ export async function POST(req: Request) {
 
     const body = await req.json();
 
-
-    console.log(
-      "TELEGRAM UPDATE:",
-      body
-    );
+    console.log("TELEGRAM UPDATE:", body);
 
 
     if (body.callback_query) {
 
-
-      const callback =
-        body.callback_query.data;
-
+      const callback = body.callback_query.data;
 
       const messageId =
         body.callback_query.message.message_id;
-
 
       const chatId =
         body.callback_query.message.chat.id;
 
 
-      // օրինակ՝ confirmed|2021-123456
+      const callbackQueryId =
+        body.callback_query.id;
+
 
       const [status, orderId] =
         callback.split("|");
@@ -49,15 +41,16 @@ export async function POST(req: Request) {
 
 
 
-      // UPDATE SUPABASE
+      // UPDATE DATABASE
 
-      const { data, error } = await supabaseAdmin
-        .from("orders")
-        .update({
-          status: status
-        })
-        .eq("id", orderId)
-        .select();
+      const { data, error } =
+        await supabaseAdmin
+          .from("orders")
+          .update({
+            status: status
+          })
+          .eq("id", orderId)
+          .select();
 
 
       console.log(
@@ -78,62 +71,112 @@ export async function POST(req: Request) {
       await fetch(
         `https://api.telegram.org/bot${token}/answerCallbackQuery`,
         {
-          method:"POST",
-          headers:{
-            "Content-Type":"application/json"
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
           },
-          body:JSON.stringify({
+          body: JSON.stringify({
+
             callback_query_id:
-              body.callback_query.id,
+              callbackQueryId,
 
             text:
               `Պատվեր ${orderId} → ${status}`
+
           })
         }
       );
 
 
 
-      // Փոխում ենք կոճակը
+      // Update buttons
 
       await fetch(
         `https://api.telegram.org/bot${token}/editMessageReplyMarkup`,
         {
-          method:"POST",
-          headers:{
-            "Content-Type":"application/json"
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
           },
-          body:JSON.stringify({
+          body: JSON.stringify({
 
             chat_id: chatId,
 
             message_id: messageId,
 
-            reply_markup:{
-              inline_keyboard:[
+
+            reply_markup: {
+
+              inline_keyboard: [
+
                 [
                   {
-                    text:`${status} ✅`,
-                    callback_data:"done"
+                    text:
+                      status === "confirmed"
+                        ? "✅ Հաստատված"
+                        : "Հաստատված",
+
+                    callback_data:
+                      `confirmed|${orderId}`
+                  }
+                ],
+
+
+                [
+                  {
+                    text:
+                      status === "preparing"
+                        ? "✅ Պատրաստվում է"
+                        : "Պատրաստվում է",
+
+                    callback_data:
+                      `preparing|${orderId}`
+                  }
+                ],
+
+
+                [
+                  {
+                    text:
+                      status === "out_for_delivery"
+                        ? "✅ Առաքման ճանապարհին"
+                        : "Առաքման ճանապարհին",
+
+                    callback_data:
+                      `out_for_delivery|${orderId}`
+                  }
+                ],
+
+
+                [
+                  {
+                    text:
+                      status === "delivered"
+                        ? "✅ Առաքված"
+                        : "Առաքված",
+
+                    callback_data:
+                      `delivered|${orderId}`
                   }
                 ]
+
               ]
+
             }
 
           })
         }
       );
 
-
     }
 
 
     return Response.json({
-      ok:true
+      ok: true
     });
 
 
-  } catch(error){
+  } catch(error) {
 
     console.error(
       "WEBHOOK ERROR:",
