@@ -32,7 +32,6 @@ export function SiteFooter() {
             ))}
           </ul>
         </div>
-
         <div>
           <h3 className="mb-3 text-sm font-bold uppercase tracking-wide">Տեղեկություն</h3>
           <ul className="flex flex-col gap-2 text-sm text-sidebar-foreground/70">
