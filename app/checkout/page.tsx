@@ -40,7 +40,7 @@ export default function CheckoutPage() {
     return Object.keys(e).length === 0
   }
 
-  function handleSubmit(ev: React.FormEvent) {
+  async function handleSubmit(ev: React.FormEvent) {
     ev.preventDefault()
   
     if (!validate() || items.length === 0) return
@@ -65,50 +65,48 @@ export default function CheckoutPage() {
       total,
     }
   
-    addOrder(order)
+    // Պահում ենք պատվերը
+    await addOrder(order)  
   
-    const message = `🛒 Նոր պատվեր
-  
-  📦 Պատվերի համար՝ ${order.id}
-  
-  👤 Անուն՝ ${form.name}
-  📞 Հեռախոս՝ ${form.phone}
-  📍 Հասցե՝ ${form.address}
-  
-  💳 Վճարում՝ ${
-      payment === 'cash'
-        ? 'Կանխիկ առաքման պահին'
-        : 'Քարտով առաքման պահին'
+    // 🔴 Ուղարկում ենք Telegram Bot-ին
+    try {
+      await fetch("/api/telegram", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: order.id,
+          name: form.name,
+          phone: form.phone,
+          address: form.address,
+          payment:
+            payment === "cash"
+              ? "Կանխիկ առաքման պահին"
+              : "Քարտով առաքման պահին",
+          total: formatAMD(total),
+          subtotal: formatAMD(subtotal),
+          deliveryFee:
+            deliveryFee === 0
+              ? "Անվճար"
+              : formatAMD(deliveryFee),
+          notes: form.notes || "-",
+          items: order.items
+            .map(
+              (item) =>
+                `• ${item.name} × ${item.quantity} = ${formatAMD(
+                  item.price * item.quantity
+                )}`
+            )
+            .join("\n"),
+        }),
+      })
+    } catch (error) {
+      console.error("Telegram error:", error)
     }
   
-  🛍 Ապրանքներ:
-  ${items
-    .map(
-      (item) =>
-        `• ${item.product.name} × ${item.quantity} = ${formatAMD(
-          item.product.price * item.quantity
-        )}`
-    )
-    .join("\n")}
-  
-  ━━━━━━━━━━━━━━
-  
-  Ապրանքներ՝ ${formatAMD(subtotal)}
-  Առաքում՝ ${
-      deliveryFee === 0 ? "Անվճար" : formatAMD(deliveryFee)
-    }
-  
-  💰 Ընդհանուր՝ ${formatAMD(total)}
-  
-  📝 Նշումներ:
-  ${form.notes || "-"}`
   
     clear()
-  
-    window.open(
-      `https://wa.me/37491331233?text=${encodeURIComponent(message)}`,
-      "_blank"
-    )
   
     router.push(`/order-confirmation/${order.id}`)
   }

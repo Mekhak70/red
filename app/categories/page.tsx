@@ -27,7 +27,7 @@ export default async function CategoriesPage() {
 
         <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
           {categories.map((c) => {
-            const count = allProducts.filter((p) => p.categoryId === c.id).length
+            const count = allProducts.filter((p) => p?.categoryId === c.id).length
             return (
               <Link
                 key={c.id}

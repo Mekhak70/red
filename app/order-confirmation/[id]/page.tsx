@@ -7,5 +7,8 @@ export default function OrderConfirmationPage({
   params: Promise<{ id: string }>
 }) {
   const { id } = use(params)
+
+  console.log("PAGE ORDER ID:", id)
+
   return <OrderConfirmationView orderId={id} />
 }

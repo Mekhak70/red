@@ -48,9 +48,9 @@ export default async function ProductPage({ params }: Params) {
   
   if (!product) notFound()
 
-  const category = categories.find((c) => c.id === product.categoryId)
+  const category = categories.find((c) => c.id === product?.categoryId)
   const related = allProducts
-    .filter((p) => p.categoryId === product.categoryId && p.id !== product.id)
+    .filter((p) => p.categoryId === product?.categoryId && p.id !== product.id)
     .slice(0, 4)
 
   return (

@@ -25,7 +25,7 @@ export default async function CategoryPage({ params }: Params) {
   const products = await fetchAllProductsFromSheets()
   const allProducts = products.length > 0 ? products : defaultProducts
   const categoryProducts = allProducts.filter((p) => p.categoryId === category.id)
-
+console.log(`Category: ${category}, Products: ${categoryProducts.length}`)
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
       {/* Header */}
@@ -53,6 +53,7 @@ export default async function CategoryPage({ params }: Params) {
       ) : (
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {categoryProducts.map((product) => (
+            console.log(`Rendering product: ${product.name}, Price: ${product.price}, Old Price: ${product.image} $`),
             <Link
               key={product.id}
               href={`/products/${product.slug}`}
@@ -60,13 +61,13 @@ export default async function CategoryPage({ params }: Params) {
             >
               <div className="relative aspect-square overflow-hidden rounded-xl bg-muted/30">
                 {product.image ? (
-                  <Image
-                    src={product.image}
-                    alt={product.name}
-                    fill
-                    className="object-cover transition-transform duration-700 group-hover:scale-110"
-                    unoptimized={product.image.startsWith('http')}
-                  />
+                 <Image
+                 src={product.image}
+                 alt={product.name || "Product"}
+                 fill
+                 className="object-cover transition-transform duration-700 group-hover:scale-110"
+                 unoptimized={product.image.startsWith("http")}
+               />
                 ) : (
                   <div className="flex h-full items-center justify-center text-muted-foreground/30">
                     No image
