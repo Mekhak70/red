@@ -1,19 +1,35 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { getOrders, updateOrderStatus, STATUS_LABELS, STATUS_FLOW, type Order, type OrderStatus } from '@/lib/orders'
+import {
+  getOrders,
+  updateOrderStatus,
+  STATUS_LABELS,
+  STATUS_FLOW,
+  type Order,
+  type OrderStatus
+} from '@/lib/orders'
+
 import { formatAMD } from '@/lib/data'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
+import Image from 'next/image'
+
+
+const PAGE_SIZE = 10
 
 
 export default function AdminOrdersPage() {
 
+
   const [orders, setOrders] = useState<Order[]>([])
   const [loading, setLoading] = useState(true)
 
+  const [page, setPage] = useState(1)
 
-  async function loadOrders(){
+
+
+  async function loadOrders() {
 
     setLoading(true)
 
@@ -27,25 +43,23 @@ export default function AdminOrdersPage() {
 
 
 
-  useEffect(()=>{
+  useEffect(() => {
 
     loadOrders()
 
-  },[])
-
+  }, [])
 
 
 
   async function changeStatus(
-    id:string,
-    status:OrderStatus
-  ){
+    id: string,
+    status: OrderStatus
+  ) {
 
     await updateOrderStatus(
       id,
       status
     )
-
 
     await loadOrders()
 
@@ -53,7 +67,7 @@ export default function AdminOrdersPage() {
 
 
 
-  if(loading){
+  if (loading) {
 
     return (
       <div className="p-10 text-center">
@@ -62,6 +76,20 @@ export default function AdminOrdersPage() {
     )
 
   }
+
+
+
+  const totalPages = Math.ceil(
+    orders.length / PAGE_SIZE
+  )
+
+
+  const currentOrders = orders.slice(
+    (page - 1) * PAGE_SIZE,
+    page * PAGE_SIZE
+  )
+
+
 
 
 
@@ -80,16 +108,30 @@ export default function AdminOrdersPage() {
 
 
         {
-          orders.map((order)=>(
+          currentOrders.map((order) => (
 
 
             <div
               key={order.id}
-              className="rounded-xl border bg-white p-5 shadow-sm"
+              className="
+            rounded-xl
+            border
+            bg-white
+            p-5
+            shadow-sm
+            "
             >
 
 
-              <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+
+              <div className="
+          flex
+          flex-col
+          gap-3
+          md:flex-row
+          md:items-center
+          md:justify-between
+          ">
 
 
                 <div>
@@ -98,6 +140,7 @@ export default function AdminOrdersPage() {
                   <h2 className="text-xl font-bold">
                     #{order.id}
                   </h2>
+
 
 
                   <p>
@@ -113,6 +156,25 @@ export default function AdminOrdersPage() {
                   <p>
                     📍 {order.customer.address}
                   </p>
+
+
+                  {
+                    order.createdAt && (
+
+                      <p className="text-sm text-gray-500 mt-2">
+
+                        📅 {
+                          new Date(
+                            order.createdAt
+                          ).toLocaleString(
+                            'hy-AM'
+                          )
+                        }
+
+                      </p>
+
+                    )
+                  }
 
 
                 </div>
@@ -135,44 +197,108 @@ export default function AdminOrdersPage() {
                 </div>
 
 
+
               </div>
 
 
 
 
-              <Separator className="my-4"/>
+
+              <Separator className="my-4" />
 
 
 
 
-              <div>
+              <h3 className="mb-3 font-bold">
+                Ապրանքներ
+              </h3>
 
-                <h3 className="mb-2 font-bold">
-                  Ապրանքներ
-                </h3>
+
+
+
+              <div className="flex flex-col gap-3">
 
 
                 {
-                  order.items.map(item=>(
+                  order.items.map(item => (
+
 
                     <div
                       key={item.id}
-                      className="flex justify-between text-sm"
+                      className="
+                flex
+                items-center
+                justify-between
+                gap-3
+                "
                     >
 
-                      <span>
-                        {item.name} × {item.quantity}
-                      </span>
 
 
-                      <span>
+                      <div className="
+              flex
+              items-center
+              gap-3
+              ">
+
+
+
+                        {
+                          item.image && (
+
+                            <div className="
+                    relative
+                    h-16
+                    w-16
+                    overflow-hidden
+                    rounded-lg
+                    border
+                    ">
+
+                              <Image
+                                src={item.image}
+                                alt={item.name}
+                                fill
+                                className="object-cover"
+                              />
+
+                            </div>
+
+                          )
+                        }
+
+
+
+                        <div>
+
+                          <p className="font-medium">
+                            {item.name}
+                          </p>
+
+                          <p className="text-sm text-gray-500">
+                            Քանակ՝ {item.quantity}
+                          </p>
+
+                        </div>
+
+
+                      </div>
+
+
+
+
+                      <span className="font-semibold">
+
                         {formatAMD(
                           item.price * item.quantity
                         )}
+
                       </span>
 
 
+
                     </div>
+
 
                   ))
                 }
@@ -183,7 +309,10 @@ export default function AdminOrdersPage() {
 
 
 
-              <Separator className="my-4"/>
+
+              <Separator className="my-4" />
+
+
 
 
 
@@ -191,7 +320,8 @@ export default function AdminOrdersPage() {
 
 
                 {
-                  STATUS_FLOW.map(status=>(
+                  STATUS_FLOW.map(status => (
+
 
                     <Button
 
@@ -204,7 +334,7 @@ export default function AdminOrdersPage() {
                       }
 
 
-                      onClick={()=>changeStatus(
+                      onClick={() => changeStatus(
                         order.id,
                         status
                       )}
@@ -215,11 +345,13 @@ export default function AdminOrdersPage() {
 
                     </Button>
 
+
                   ))
                 }
 
 
               </div>
+
 
 
             </div>
@@ -230,6 +362,65 @@ export default function AdminOrdersPage() {
 
 
       </div>
+
+
+
+
+
+      {
+        totalPages > 1 && (
+
+          <div className="
+          mt-8
+          flex
+          justify-center
+          gap-2
+          ">
+
+
+            {
+              Array.from(
+                {
+                  length: totalPages
+                }
+              ).map((_, index) => (
+
+
+                <Button
+
+                  key={index}
+
+                  variant={
+                    page === index + 1
+                      ? "default"
+                      : "outline"
+                  }
+
+
+                  onClick={() => {
+                    setPage(index + 1), window.scrollTo({
+                      top: 0,
+                      behavior: 'smooth'
+                    })
+                  }}
+
+                >
+
+                  {index + 1}
+
+                </Button>
+
+
+              ))
+            }
+
+
+          </div>
+
+        )
+      }
+
+
 
 
     </div>

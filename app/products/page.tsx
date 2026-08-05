@@ -10,7 +10,13 @@ export const metadata: Metadata = {
   description: 'Դիտեք մեր ամբողջ տեսականին՝ թարմ մթերք, խմիչքներ, կենցաղային ապրանքներ և ավելին։',
 }
 
-export default async function ProductsPage() {
+export default async function ProductsPage({
+  searchParams,
+ }:{
+  searchParams:{
+   q?:string
+  }
+ }){
   // Fetch all products from Google Sheets
   const products = await fetchAllProductsFromSheets()
   const allProducts = products.length > 0 ? products : defaultProducts
@@ -21,6 +27,9 @@ export default async function ProductsPage() {
         <ProductsBrowser 
           initialCategory={null}
           initialProducts={allProducts}
+          initialSearch={
+            searchParams.q || ''
+           }
         />
       </Suspense>
     </SiteShell>

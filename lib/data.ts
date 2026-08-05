@@ -12,6 +12,7 @@ export type Category = {
 };
 
 export type Product = {
+  category: any;
   id: string;
   slug: string;
   name: string;

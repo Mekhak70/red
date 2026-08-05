@@ -1,6 +1,7 @@
 import { supabase } from "./supabase"
 
 
+
 export type OrderStatus =
   | 'pending'
   | 'confirmed'
@@ -22,25 +23,41 @@ export type OrderItem = {
 
 
 export type Order = {
+
   id: string
+
   createdAt: string
+
   status: OrderStatus
 
+
   customer: {
+
     name: string
+
     phone: string
+
     address: string
+
     notes?: string
+
   }
+
 
   payment: 'cash' | 'card'
 
+
   items: OrderItem[]
 
+
   subtotal: number
+
   deliveryFee: number
+
   total: number
+
 }
+
 
 
 
@@ -63,6 +80,8 @@ export const STATUS_LABELS: Record<OrderStatus, string> = {
 
 
 
+
+
 export const STATUS_FLOW: OrderStatus[] = [
 
   'pending',
@@ -81,49 +100,54 @@ export const STATUS_FLOW: OrderStatus[] = [
 
 
 
+
+
 // ===============================
 // Supabase -> Order converter
 // ===============================
 
-function mapOrder(data: any): Order {
+function mapOrder(data:any):Order {
 
   return {
 
-    id: data.id,
+    id:data.id,
 
-    createdAt: data.created_at,
+    createdAt:data.created_at,
 
-    status: data.status,
+    status:data.status,
 
 
-    customer: {
+    customer:{
 
-      name: data.name,
+      name:data.name,
 
-      phone: data.phone,
+      phone:data.phone,
 
-      address: data.address,
+      address:data.address,
 
-      notes: data.notes || "",
+      notes:data.notes || "",
 
     },
 
 
-    payment: data.payment,
+    payment:data.payment,
 
 
-    items: data.items || [],
+    items:data.items || [],
 
 
-    subtotal: Number(data.subtotal),
+    subtotal:Number(data.subtotal),
 
-    deliveryFee: Number(data.delivery_fee),
+    deliveryFee:Number(data.delivery_fee),
 
-    total: Number(data.total),
+    total:Number(data.total),
 
   }
 
 }
+
+
+
 
 
 
@@ -134,48 +158,50 @@ function mapOrder(data: any): Order {
 // ===============================
 
 export async function addOrder(
-  order: Order
-) {
+  order:Order
+){
 
 
-  const { error } = await supabase
+  const {error}=await supabase
+
     .from("orders")
+
     .insert({
 
-      id: order.id,
+      id:order.id,
 
-      created_at: order.createdAt,
+      created_at:order.createdAt,
 
-      status: order.status,
-
-
-      name: order.customer.name,
-
-      phone: order.customer.phone,
-
-      address: order.customer.address,
+      status:order.status,
 
 
-      payment: order.payment,
+      name:order.customer.name,
+
+      phone:order.customer.phone,
+
+      address:order.customer.address,
 
 
-      items: order.items,
+      payment:order.payment,
 
 
-      subtotal: order.subtotal,
-
-      delivery_fee: order.deliveryFee,
-
-      total: order.total,
+      items:order.items,
 
 
-      notes: order.customer.notes || null,
+      subtotal:order.subtotal,
+
+      delivery_fee:order.deliveryFee,
+
+      total:order.total,
+
+
+      notes:order.customer.notes || null,
 
     })
 
 
 
-  if (error) {
+  if(error){
 
     console.error(
       "ADD ORDER ERROR:",
@@ -195,45 +221,64 @@ export async function addOrder(
 
 
 
+
+
 // ===============================
 // Ստանալ մեկ պատվեր
 // ===============================
 
 export async function getOrder(
-  id: string
-): Promise<Order | null> {
+  id:string
+):Promise<Order|null>{
 
-  const cleanId = id.trim()
 
-  console.log("SEARCHING:", JSON.stringify(cleanId))
+  const cleanId=id.trim()
 
-  const { data, error } = await supabase
+
+  const {data,error}=await supabase
+
     .from("orders")
+
     .select("*")
-    .eq("id", cleanId)
+
+    .eq(
+      "id",
+      cleanId
+    )
+
     .maybeSingle()
 
 
-  console.log("DATA:", JSON.stringify(data, null, 2))
-  console.log("ERROR:", error)
 
+  if(error){
 
-  if (error) {
-    console.error("SUPABASE ERROR:", error)
+    console.error(
+      "GET ORDER ERROR:",
+      error
+    )
+
     return null
+
   }
 
 
-  if (!data) {
-    console.log("ORDER NOT FOUND:", cleanId)
+
+  if(!data){
+
     return null
+
   }
 
 
-  console.log("FOUND ORDER ID:", data.id)
 
   return mapOrder(data)
+
 }
+
+
+
+
+
 
 
 
@@ -242,22 +287,25 @@ export async function getOrder(
 // Բոլոր պատվերները
 // ===============================
 
-export async function getOrders(): Promise<Order[]> {
+export async function getOrders():Promise<Order[]>{
 
 
-  const { data, error } = await supabase
+  const {data,error}=await supabase
+
     .from("orders")
+
     .select("*")
+
     .order(
       "created_at",
       {
-        ascending: false
+        ascending:false
       }
     )
 
 
 
-  if (error) {
+  if(error){
 
     console.error(
       "GET ORDERS ERROR:",
@@ -280,43 +328,83 @@ export async function getOrders(): Promise<Order[]> {
 
 
 
+
+
 // ===============================
 // Փոխել պատվերի status
 // ===============================
 
 export async function updateOrderStatus(
-  id: string,
-  status: OrderStatus
-) {
+
+  id:string,
+
+  status:OrderStatus
+
+){
 
 
-  const { error } = await supabase
+
+  const {data,error}=await supabase
+
     .from("orders")
+
     .update({
 
-      status
+      status:status
 
     })
+
     .eq(
       "id",
       id
     )
 
+    .select()
 
 
-  if (error) {
 
-    console.error(
-      "UPDATE STATUS ERROR:",
-      error
-    )
+
+
+  console.log(
+    "UPDATE STATUS DATA:",
+    data
+  )
+
+
+  console.log(
+    "UPDATE STATUS ERROR:",
+    error
+  )
+
+
+
+
+
+  if(error){
 
     throw error
 
   }
 
 
+
+
+
+  if(!data || data.length===0){
+
+    throw new Error(
+      "Order status not updated"
+    )
+
+  }
+
+
+
+  return data[0]
+
 }
+
+
 
 
 
@@ -328,14 +416,16 @@ export async function updateOrderStatus(
 // Ստեղծել պատվերի ID
 // ===============================
 
-export function generateOrderId() {
+export function generateOrderId(){
 
 
-  const number =
-    Math.floor(
-      100000 +
-      Math.random() * 900000
-    )
+  const number=Math.floor(
+
+    100000 +
+
+    Math.random()*900000
+
+  )
 
 
   return `2021-${number}`
