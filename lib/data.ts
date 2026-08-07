@@ -43,9 +43,9 @@ export const categories: Category[] = [
   {
     id: 'c1',
     slug: 'fruits-vegetables',
-    name: 'Թարմ միրգ և բանջարեղեն',
+    name: 'Միրգ և բանջարեղեն',
     image: '/products/fruits.png',
-    sheetName: '25',
+    sheetName: 'Sheet25',
   },
   {
     id: 'c2',
